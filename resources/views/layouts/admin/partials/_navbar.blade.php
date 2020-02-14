@@ -21,6 +21,7 @@
                         Content
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{{ route('admin.subject.index') }}">Subjects</a>
                         <a class="dropdown-item" href="{{ route('admin.course.index') }}">Courses</a>
                         <a class="dropdown-item" href="#">Lesson</a>
                     </div>

@@ -24,5 +24,9 @@ Route::prefix('admin')->name('admin.')->namespace('Admin')->middleware(['auth', 
         Route::get('/', 'SettingController@index')->name('index');
         Route::post('store', 'SettingController@store')->name('store');
     });
+    Route::resource('subject', 'SubjectController');
     Route::resource('course', 'CourseController');
+    Route::prefix('service')->name('service')->group(function () {
+        Route::get('/select/subject', 'ServiceController@getSubject');
+    });
 });

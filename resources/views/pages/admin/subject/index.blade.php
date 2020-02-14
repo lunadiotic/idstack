@@ -6,8 +6,8 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
-                    Courses
-                    <a href="{{ route('admin.course.create') }}" class="btn btn-primary btn-sm float-right">Add</a>
+                    Subjects
+                    <a href="{{ route('admin.subject.create') }}" class="btn btn-primary btn-sm float-right">Add</a>
                 </div>
 
                 <div class="card-body">
@@ -35,7 +35,7 @@
         $('#dataTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('admin.course.index') }}",
+                ajax: "{{ route('admin.subject.index') }}",
                 columns: [
                     {data: 'DT_RowIndex', name: 'id'},
                     {data: 'title', name: 'title'},

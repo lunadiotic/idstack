@@ -20,7 +20,7 @@ class CreateCoursesTable extends Migration
             $table->string('title');
             $table->string('description');
             $table->string('image')->nullable();
-            $table->string('runtime')->default();
+            $table->string('runtime')->nullable();
             $table->double('price', 8, 2)->default(0);
             $table->boolean('is_pro')->default(0);
             $table->boolean('is_featured')->default(0);

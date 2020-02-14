@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Course;
+use App\Models\Subject;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Yajra\DataTables\Facades\DataTables;
 
-class CourseController extends Controller
+class SubjectController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,14 +17,14 @@ class CourseController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $model = Course::query();
+            $model = Subject::query();
             return DataTables::of($model)
                 ->addColumn('action', function ($model) {
                     return view('layouts.admin.partials._action', [
                         'model' => $model,
-                        'show_url' => route('admin.course.show', $model->id),
-                        'edit_url' => route('admin.course.edit', $model->id),
-                        'delete_url' => route('admin.course.destroy', $model->id)
+                        'show_url' => route('admin.subject.show', $model->id),
+                        'edit_url' => route('admin.subject.edit', $model->id),
+                        'delete_url' => route('admin.subject.destroy', $model->id)
                     ]);
                 })
                 ->rawColumns(['action'])
@@ -32,7 +32,7 @@ class CourseController extends Controller
                 ->make(true);
         }
 
-        return view('pages.admin.course.index');
+        return view('pages.admin.subject.index');
     }
 
     /**
@@ -42,7 +42,7 @@ class CourseController extends Controller
      */
     public function create()
     {
-        return view('pages.admin.course.create');
+        return view('pages.admin.subject.create');
     }
 
     /**
@@ -53,11 +53,14 @@ class CourseController extends Controller
      */
     public function store(Request $request)
     {
-        $course = Course::create($request->except('subjects'));
+        $this->validate($request, [
+            'slug' => ['unique:subjects'],
+            'title' => ['required']
+        ]);
 
-        $course->subjects()->sync($request->get('subjects'));
+        Subject::create($request->all());
 
-        return redirect()->route('admin.course.index');
+        return redirect()->route('admin.subject.index');
     }
 
     /**
@@ -66,7 +69,7 @@ class CourseController extends Controller
      * @param  \App\Models\Course  $course
      * @return \Illuminate\Http\Response
      */
-    public function show(Course $course)
+    public function show(Subject $subject)
     {
         //
     }
@@ -77,9 +80,9 @@ class CourseController extends Controller
      * @param  \App\Models\Course  $course
      * @return \Illuminate\Http\Response
      */
-    public function edit(Course $course)
+    public function edit(Subject $subject)
     {
-        return view('pages.admin.course.edit', compact('course'));
+        return view('pages.admin.subject.edit', compact('subject'));
     }
 
     /**
@@ -89,13 +92,15 @@ class CourseController extends Controller
      * @param  \App\Models\Course  $course
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Course $course)
+    public function update(Request $request, Subject $subject)
     {
-        $course->update($request->except('subjects'));
+        $this->validate($request, [
+            'slug' => ['unique:subjects,slug,' . $subject->id],
+            'title' => ['required']
+        ]);
 
-        $course->subjects()->sync($request->get('subjects'));
-
-        return redirect()->route('admin.course.index');
+        $subject->update($request->all());
+        return redirect()->route('admin.subject.index');
     }
 
     /**
@@ -104,12 +109,9 @@ class CourseController extends Controller
      * @param  \App\Models\Course  $course
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Course $course)
+    public function destroy(Subject $subject)
     {
-        $course->subjects()->detach();
-
-        $course->delete();
-
-        return redirect()->route('admin.course.index');
+        $subject->delete();
+        return redirect()->route('admin.subject.index');
     }
 }
